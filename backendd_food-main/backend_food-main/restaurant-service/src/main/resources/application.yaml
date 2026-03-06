@@ -1,0 +1,20 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/restaurant_db
+    username: root
+    password: Nikita@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB      # increase max single file size
+      max-request-size: 20MB   # increase total request size
+
+jwt:
+  secret: mysecretkeymysecretkeymysecretkeymysecretkey

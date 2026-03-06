@@ -1,0 +1,24 @@
+
+
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/register_db
+    username: root
+    password: Nikita@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: mysecretkeymysecretkeymysecretkeymysecretkey
+
+  spring:
+    security:
+      user:
+        name: disabled
+        password: disabled
+
