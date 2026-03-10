@@ -133,4 +133,17 @@ public class MenuController {
 
         return ResponseEntity.ok("Status updated");
     }
+
+    // ================== GET MENU BY RESTAURANT ID (FOR USERS) ==================
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<Map<String, Object>>> getMenuByRestaurantId(
+            @PathVariable Long restaurantId) {
+
+        RestaurantEntity restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        List<Map<String, Object>> menus = menuService.getMenuByRestaurant(restaurant);
+
+        return ResponseEntity.ok(menus);
+    }
 }

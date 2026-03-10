@@ -37,8 +37,10 @@ public class SecurityConfig {
                         // -------- PUBLIC ENDPOINTS --------
                         .requestMatchers("/api/menu/categories").permitAll()
                         .requestMatchers("/api/menu/subcategories").permitAll()
+                        .requestMatchers("/api/menu/restaurant/**").permitAll()
                         .requestMatchers("/api/products/image/**").permitAll()
                         .requestMatchers("/api/restaurant/all").permitAll()
+                        .requestMatchers("/api/restaurant/**").permitAll()
 
                         // -------- RESTAURANT PROTECTED --------
                         .requestMatchers("/api/menu/restaurant/products").hasRole("RESTAURANT")
@@ -54,11 +56,10 @@ public class SecurityConfig {
                 .build();
     }
 
-    // 🔹 CORS configuration
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // React frontend
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

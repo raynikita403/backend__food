@@ -93,4 +93,19 @@ public class RestaurantService {
 		restaurant.setStatus("active".equalsIgnoreCase(active));
 		restaurantRepository.save(restaurant);
 	}
+
+	public Map<String, Object> getRestaurantById(Long id) {
+		RestaurantEntity restaurant = restaurantRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+		// Convert to DTO or Map for frontend
+		return Map.of(
+				"id", restaurant.getId(),
+				"name", restaurant.getName(),
+				"description", restaurant.getDescription(),
+				"timing", restaurant.getTiming(),
+				"location", restaurant.getLocation(),
+				"active", restaurant.isStatus()
+		);
+	}
 }

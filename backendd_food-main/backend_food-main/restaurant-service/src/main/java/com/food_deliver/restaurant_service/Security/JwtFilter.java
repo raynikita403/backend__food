@@ -26,14 +26,25 @@ public class JwtFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("JwtFilter executed");
 
+        String path = request.getRequestURI();
+
+        // ----- PUBLIC ENDPOINTS (no JWT required) -----
+        if (path.startsWith("/api/restaurant/") ||
+                path.startsWith("/api/menu/categories") ||
+                path.startsWith("/api/menu/subcategories") ||
+                path.startsWith("/api/menu/restaurant/products") ||
+                path.startsWith("/api/products/image")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // ----- JWT VALIDATION FOR PROTECTED ENDPOINTS -----
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -42,20 +53,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String email = jwtUtil.extractEmail(token);
             List<String> roles = jwtUtil.extractRoles(token);
-           // System.out.println("Roles from token: ");
 
-            if (email != null) {
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 List<GrantedAuthority> authorities =
                         roles.stream()
-                                .map(role -> new SimpleGrantedAuthority(role))
+                                .map(SimpleGrantedAuthority::new)
                                 .collect(Collectors.toList());
+
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                authorities
-                        );
+                        new UsernamePasswordAuthenticationToken(email, null, authorities);
+
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
@@ -66,5 +74,4 @@ public class JwtFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 }

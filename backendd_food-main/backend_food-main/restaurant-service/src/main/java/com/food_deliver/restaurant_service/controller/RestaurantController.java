@@ -68,6 +68,11 @@ public class RestaurantController {
         public void setActive(String active) { this.active = active; }
     }
 
+    // In RestaurantController
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getRestaurantById(@PathVariable Long id) {
+        return ResponseEntity.ok(restaurantService.getRestaurantById(id));
+    }
     // DTO classes for login
     public static class LoginRequest {
         private String email;
